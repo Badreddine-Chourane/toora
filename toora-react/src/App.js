@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import VillesList from './VillesList';
+import VillesList from './pages/VillesList';
 
 function App() {
   return (
