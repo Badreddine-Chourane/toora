@@ -15,31 +15,61 @@ class ScooterController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'code' => 'required|unique:scooters',
-            'modele' => 'required',
-            'batterie' => 'required|integer',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
+        $validated = $request->validate([
+            'code' => 'required|string',
+            'modele' => 'required|string',
+            'etat' => 'required|string',
+            'batterie' => 'required|numeric',
+            'latitude' => 'required',
+            'longitude' => 'required',
             'ville_id' => 'required|exists:villes,id',
+            'en_location' => 'boolean',
+            'photo' => 'nullable|image|max:2048',
         ]);
 
-        $scooter = Scooter::create($request->all());
-        return response()->json($scooter, 201);
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('scooters', 'public');
+            $validated['photo'] = $path;
+        }
+
+        Scooter::create($validated);
+
+        return response()->json(['message' => 'Scooter créé avec succès.']);
     }
+
+
 
     public function show($id)
     {
-        $scooter = Scooter::findOrFail($id);
+        $scooter = Scooter::with('ville')->findOrFail($id);
         return response()->json($scooter);
     }
 
-    public function update(Request $request, $id)
+
+    public function update(Request $request, Scooter $scooter)
     {
-        $scooter = Scooter::findOrFail($id);
-        $scooter->update($request->all());
+        $validated = $request->validate([
+            'code' => 'required',
+            'modele' => 'required',
+            'etat' => 'required',
+            'batterie' => 'required|numeric',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'ville_id' => 'required|exists:villes,id',
+            'en_location' => 'boolean',
+            'photo' => 'nullable|image',
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('scooters', 'public');
+            $validated['photo'] = $path;
+        }
+
+        $scooter->update($validated);
+
         return response()->json($scooter);
     }
+
 
     public function destroy($id)
     {
@@ -53,17 +83,5 @@ class ScooterController extends Controller
         return response()->json($scooters);
     }
 
-    public function uploadPhoto(Request $request, $id)
-    {
-        $request->validate([
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
 
-        $scooter = Scooter::findOrFail($id);
-        $photoPath = $request->file('photo')->store('scooters', 'public');
-        $scooter->photo = $photoPath;
-        $scooter->save();
-
-        return response()->json(['message' => 'Photo uploaded successfully', 'photo' => $photoPath]);
-    }
-}
+ }
