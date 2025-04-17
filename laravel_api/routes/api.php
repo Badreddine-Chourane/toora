@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScooterController;
@@ -28,6 +29,10 @@ Route::apiResource('paiements', PaiementController::class);
 Route::apiResource('utilisateurs', UtilisateurController::class);
 Route::apiResource('villes', VilleController::class);
 Route::apiResource('tarifs', TarifController::class);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/me', [AuthController::class, 'me']);
 
 
 // Custom routes (optional examples)

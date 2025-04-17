@@ -1,14 +1,15 @@
 <?php
+// app/Models/Utilisateur.php
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable; // Change here!
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Utilisateur extends Model
+class Utilisateur extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UtilisateurFactory> */
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'nom',
@@ -16,8 +17,19 @@ class Utilisateur extends Model
         'mot_de_passe',
         'role',
         'ville_id'
-
     ];
+
+    protected $hidden = [
+        'mot_de_passe',
+        'remember_token',
+    ];
+
+    // This tells Laravel which attribute should be used as the password.
+    public function getAuthPassword()
+    {
+        return $this->mot_de_passe;
+    }
+
     public function ville()
     {
         return $this->belongsTo(Ville::class);
