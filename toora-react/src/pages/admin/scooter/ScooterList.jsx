@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import scooterAPI from '../../api/scooters';
+import scooterAPI from '../../../../api/scooters';
 
 const ScooterList = () => {
   const [scooters, setScooters] = useState([]);

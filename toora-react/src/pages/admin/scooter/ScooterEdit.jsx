@@ -1,8 +1,8 @@
 // src/pages/scooters/ScooterEdit.js
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import scooterAPI from '../../api/scooters';
-import api from '../../api';
+import scooterAPI from '../../../api/scooters';
+import api from '../../../api';
 
 const ScooterEdit = () => {
   const { id } = useParams();
