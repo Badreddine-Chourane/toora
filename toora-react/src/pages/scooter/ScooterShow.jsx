@@ -47,7 +47,9 @@ const ScooterShow = () => {
                   🔋 {scooter.batterie}%
                 </span>
                 <span className="text-muted">
-                  {scooter.ville ? scooter.ville.nom : "Ville inconnue"}
+                {scooter.ville && scooter.ville.nom
+                              ? scooter.ville.nom
+                              : "Ville inconnue"}
                 </span>
               </div>
               <p className="text-muted small mb-2">

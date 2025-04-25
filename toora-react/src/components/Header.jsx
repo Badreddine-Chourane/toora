@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
-const Header = ({ isLoggedIn, handleLogout }) => {
+
+const Header = ({ isLoggedIn, isAdmin, handleLogout }) => {
+  const userName = localStorage.getItem('userName');
+
   return (
     <nav className="bg-success text-white p-4">
       <div className="container d-flex justify-content-between align-items-center">
@@ -18,10 +21,17 @@ const Header = ({ isLoggedIn, handleLogout }) => {
             </>
           ) : (
             <>
-              <span className="text-white">Welcome, User!</span>
+              {isAdmin && (
+                <Link to="/admin" className="btn btn-warning px-4 py-2">
+                  Admin Dashboard
+                </Link>
+              )}
+              <span className="text-white">
+                Bonjour{userName ? `, ${userName}` : ''}!
+              </span>
               <button 
                 className="btn btn-light text-success px-4 py-2"
-                onClick={handleLogout} // Call handleLogout on click
+                onClick={handleLogout}
               >
                 Logout
               </button>

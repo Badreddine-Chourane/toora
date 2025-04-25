@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import scooterAPI from '../../../../api/scooters';
+import scooterAPI from '../../../api/scooters';
 
 const ScooterList = () => {
   const [scooters, setScooters] = useState([]);
@@ -18,17 +18,33 @@ const ScooterList = () => {
   return (
     <div>
       <h2>Liste des scooters</h2>
-      <Link to="/scooters/create">➕ Ajouter un scooter</Link>
-      <ul>
-        {scooters.map(s => (
-          <li key={s.id}>
-            {s.code} - {s.modele} ({s.etat}) | 🔋 {s.batterie}% |
-            <Link to={`/scooters/${s.id}`}> Voir </Link> |
-            <Link to={`/scooters/${s.id}/edit`}> Modifier </Link> |
-            <button onClick={() => deleteScooter(s.id)}>🗑️ Supprimer</button>
-          </li>
-        ))}
-      </ul>
+      <Link to="/scooters/create" className="btn btn-success mb-3">➕ Ajouter un scooter</Link>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Modèle</th>
+            <th>État</th>
+            <th>Batterie (%)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {scooters.map(s => (
+            <tr key={s.id}>
+              <td>{s.code}</td>
+              <td>{s.modele}</td>
+              <td>{s.etat}</td>
+              <td>{s.batterie}</td>
+              <td>
+                <Link to={`/scooters/${s.id}`} className="btn btn-info btn-sm me-1">Voir</Link>
+                <Link to={`/scooters/${s.id}/edit`} className="btn btn-warning btn-sm me-1">Modifier</Link>
+                <button className="btn btn-danger btn-sm" onClick={() => deleteScooter(s.id)}>🗑️ Supprimer</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

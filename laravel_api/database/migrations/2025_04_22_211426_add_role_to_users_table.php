@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('scooters', function (Blueprint $table) {
-            $table->string('photo')->nullable()->after('modele');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('user');
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('scooters', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

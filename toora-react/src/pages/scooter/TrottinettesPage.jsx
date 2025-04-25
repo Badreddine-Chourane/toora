@@ -3,11 +3,10 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import AuthModals from "../../components/AuthModals";
-import scooterAPI from "../../api/scooters"; // Import the scooterAPI
+import scooterAPI from "../../api/scooters";
 
-const TrottinettesPage = () => {
+const TrottinettesPage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) => {
   const [scooters, setScooters] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showSignupForm, setShowSignupForm] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -15,23 +14,27 @@ const TrottinettesPage = () => {
   useEffect(() => {
     scooterAPI.list()
       .then(response => {
-        setScooters(response.data); // Set scooters data from the API response
+        setScooters(response.data);
       })
       .catch(error => {
-        console.error("Erreur lors de la récupération des trottinettes :", error); // Handle errors
+        console.error("Erreur lors de la récupération des trottinettes :", error);
       })
       .finally(() => {
-        setLoading(false); // Set loading to false after the request is completed
+        setLoading(false);
       });
-  }, []); // Empty dependency array to run the effect once on component mount
+  }, []);
 
   return (
     <div className="min-vh-100 d-flex flex-column">
       <Header
         isLoggedIn={isLoggedIn}
+        isAdmin={isAdmin}
         setIsLoggedIn={setIsLoggedIn}
-        setShowLoginForm={setShowLoginForm}
-        setShowSignupForm={setShowSignupForm}
+        handleLogout={() => {
+          setIsLoggedIn(false);
+          setIsAdmin(false);
+          localStorage.clear();
+        }}
       />
 
       <main className="flex-grow-1 py-5 bg-light">
@@ -63,7 +66,6 @@ const TrottinettesPage = () => {
                             🔋 {scooter.batterie}%
                           </span>
                           <span className="text-muted">
-                            {/* Check if ville is defined before accessing its properties */}
                             {scooter.ville && scooter.ville.nom
                               ? scooter.ville.nom
                               : "Ville inconnue"}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const LoginPage = ({ setIsLoggedIn }) => {
+const LoginPage = ({ setIsLoggedIn, setIsAdmin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -15,13 +15,15 @@ const LoginPage = ({ setIsLoggedIn }) => {
         email,
         password,
       });
-  
+
       if (response.status === 200) {
-        const { user, token } = response.data;
-        localStorage.setItem('authToken', token); // Save token to localStorage
-        setIsLoggedIn(true); // Update login state
-        console.log('Logged in user:', user);
-        navigate('/'); // Redirect to home page
+        const { user, token, role } = response.data;
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('userRole', role);
+        localStorage.setItem('userName', user.name);
+        setIsLoggedIn(true);
+        setIsAdmin && setIsAdmin(role === 'admin');
+        navigate('/'); // No need for window.location.href
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
