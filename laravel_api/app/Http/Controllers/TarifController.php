@@ -10,14 +10,14 @@ class TarifController extends Controller
     public function index()
     {
         $tarifs = Tarif::all();
-        return response()->json($tarifs);
+        return Tarif::with('ville')->get();
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'ville_id' => 'required|exists:villes,id',
-            'prix_par_minute' => 'required|numeric',
+            'prix_par_heure' => 'required|numeric',
             'prix_de_depart' => 'required|numeric',
         ]);
 

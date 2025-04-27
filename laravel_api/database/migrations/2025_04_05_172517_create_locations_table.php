@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('statut')->default('en_cours'); // or enum later
             $table->timestamps();
 
-            $table->foreign('utilisateur_id')->references('id')->on('utilisateurs')->onDelete('cascade');
+            $table->foreign('utilisateur_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('scooter_id')->references('id')->on('scooters')->onDelete('cascade');
         });
     }

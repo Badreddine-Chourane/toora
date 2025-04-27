@@ -9,7 +9,7 @@ class ScooterController extends Controller
 {
     public function index()
     {
-        $scooters = Scooter::all();
+        $scooters = Scooter::with('ville.tarif')->get();
         return response()->json($scooters);
     }
 
@@ -41,7 +41,7 @@ class ScooterController extends Controller
 
     public function show($id)
     {
-        $scooter = Scooter::with('ville')->findOrFail($id);
+        $scooter = Scooter::with('ville.tarif')->findOrFail($id);
         return response()->json($scooter);
     }
 

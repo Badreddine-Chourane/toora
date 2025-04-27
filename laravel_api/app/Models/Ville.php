@@ -22,8 +22,8 @@ class Ville extends Model
         return $this->hasMany(Scooter::class);
     }
 
-    public function tarifs()
-    {
-        return $this->hasOne(Tarif::class);
-    }
+    public function tarif()
+{
+    return $this->hasOne(Tarif::class);
+}
 }

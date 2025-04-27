@@ -67,18 +67,13 @@ const HomePage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) => {
 
   return (
     <div className="min-vh-100 bg-light">
-      <Header
-        isLoggedIn={isLoggedIn}
-        isAdmin={isAdmin}
-        setIsLoggedIn={setIsLoggedIn}
-        handleLogout={handleLogout}
-      />
+
       <HeroSection />
       <HowItWorks />
       <Benefits />
       <MapSection />
       <Testimonials />
-      <Footer />
+
       <AuthModals 
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}

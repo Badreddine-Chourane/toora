@@ -71,6 +71,13 @@ Route::post('/login', function (Request $request) {
     return response()->json(['error' => 'Invalid credentials'], 401);
 });
 
+
+Route::get('/locations', [LocationController::class, 'index']); // admin
+Route::get('/locations/{id}', [LocationController::class, 'show']); // admin/user
+Route::post('/locations', [LocationController::class, 'store']); // reserve
+Route::put('/locations/{id}', [LocationController::class, 'update']); // return
+
+
 // Custom routes (optional examples)
 Route::get('scooters/ville/{villeId}', [ScooterController::class, 'getByVille']);
 Route::get('locations/utilisateur/{utilisateurId}', [LocationController::class, 'getByUtilisateur']);

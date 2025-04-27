@@ -21,9 +21,10 @@ const LoginPage = ({ setIsLoggedIn, setIsAdmin }) => {
         localStorage.setItem('authToken', token);
         localStorage.setItem('userRole', role);
         localStorage.setItem('userName', user.name);
+        localStorage.setItem('userId', user.id); // <-- This is important!
         setIsLoggedIn(true);
         setIsAdmin && setIsAdmin(role === 'admin');
-        navigate('/'); // No need for window.location.href
+        navigate('/');
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {

@@ -19,7 +19,7 @@ class Location extends Model
     ];
     public function utilisateur()
     {
-        return $this->belongsTo(Utilisateur::class);
+        return $this->belongsTo(\App\Models\User::class, 'utilisateur_id');
     }
 
     public function scooter()

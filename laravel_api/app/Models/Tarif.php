@@ -11,7 +11,7 @@ class Tarif extends Model
     use HasFactory;
     protected $fillable = [
         'ville_id',
-        'prix_par_minute',
+        'prix_par_heure',
         'prix_de_depart',
     ];
     public function ville()

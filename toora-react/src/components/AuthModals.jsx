@@ -7,17 +7,22 @@ const AuthModals = ({
   showSignupForm, 
   setShowSignupForm, 
   handleRegister, 
-  errorMessage 
+  errorMessage,
+  setIsLoggedIn
 }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
-  const onLoginSubmit = (e) => {
-    e.preventDefault();
-    handleLogin(email, password);
-  };
+  const onLoginSubmit = async (e) => {
+  e.preventDefault();
+  const success = await handleLogin(email, password);
+  if (success) {
+    setIsLoggedIn(true);
+    setShowLoginForm(false);
+  }
+};
 
   const onRegisterSubmit = (e) => {
     e.preventDefault();

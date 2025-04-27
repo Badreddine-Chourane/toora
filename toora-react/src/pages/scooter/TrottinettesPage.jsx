@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import AuthModals from "../../components/AuthModals";
@@ -10,8 +10,14 @@ const TrottinettesPage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) =>
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showSignupForm, setShowSignupForm] = useState(false);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    fetchScooters();
+  }, []);
+
+  const fetchScooters = () => {
+    setLoading(true);
     scooterAPI.list()
       .then(response => {
         setScooters(response.data);
@@ -22,20 +28,11 @@ const TrottinettesPage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) =>
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  };
 
   return (
     <div className="min-vh-100 d-flex flex-column">
-      <Header
-        isLoggedIn={isLoggedIn}
-        isAdmin={isAdmin}
-        setIsLoggedIn={setIsLoggedIn}
-        handleLogout={() => {
-          setIsLoggedIn(false);
-          setIsAdmin(false);
-          localStorage.clear();
-        }}
-      />
+
 
       <main className="flex-grow-1 py-5 bg-light">
         <div className="container">
@@ -91,6 +88,16 @@ const TrottinettesPage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) =>
                                 : "btn-success"
                             }`}
                             disabled={scooter.en_location}
+                            onClick={e => {
+                              e.preventDefault();
+                              if (!isLoggedIn) {
+                                setShowLoginForm(true);
+                                navigate(`/login`);
+
+                              } else {
+                                navigate(`/trottinettes/${scooter.id}/reserver`);
+                              }
+                            }}
                           >
                             {scooter.en_location
                               ? "Déjà louée"
@@ -107,7 +114,7 @@ const TrottinettesPage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) =>
         </div>
       </main>
 
-      <Footer />
+
 
       <AuthModals
         isLoggedIn={isLoggedIn}
