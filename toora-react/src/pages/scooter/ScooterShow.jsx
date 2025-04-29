@@ -4,6 +4,7 @@ import scooterAPI from '../../api/scooters';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import AuthModals from "../../components/AuthModals";
+import { QRCodeCanvas } from "qrcode.react";
 
 const ScooterShow = () => {
   const { id } = useParams();
@@ -103,6 +104,16 @@ const ScooterShow = () => {
               </button>
             </div>
           </div>
+          {/* QR Code for reservation */}
+          {scooter && (
+            <div className="mt-4 text-center">
+              <h5>QR Code pour réserver ce scooter :</h5>
+              <QRCodeCanvas value={`http://localhost:3000/trottinettes/${scooter.id}/reserver`} size={180} />
+              <div className="mt-2">
+                <small>Scannez pour réserver ce scooter</small>
+              </div>
+            </div>
+          )}
           <div className="mt-4">
             <Link to="/trottinettes" className="btn btn-primary">
               🔙 Retour à la liste

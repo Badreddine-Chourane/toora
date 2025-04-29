@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../../api';
 import { useNavigate } from 'react-router-dom';
+import { QRCodeCanvas } from "qrcode.react";
 
 const ScooterCreate = () => {
   const [form, setForm] = useState({
@@ -17,6 +18,7 @@ const ScooterCreate = () => {
   });
   
   const [villes, setVilles] = useState([]);
+  const [createdId, setCreatedId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,11 +49,8 @@ const ScooterCreate = () => {
     }
   
     try {
-      await api.post('/scooters', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const res = await api.post('/scooters', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      setCreatedId(res.data.id); // or res.data.scooter.id depending on your API
       alert('Scooter créé avec succès !');
       navigate('/scooters');
     } catch (error) {
@@ -97,6 +96,15 @@ const ScooterCreate = () => {
         <input type="file" name="photo" onChange={handleChange} />
         <button type="submit">Créer</button>
       </form>
+      {createdId && (
+  <div className="mt-4 text-center">
+    <h5>QR Code pour réserver ce scooter :</h5>
+    <QRCodeCanvas value={`http://localhost:3000/trottinettes/${createdId}/reserver`} size={180} />
+    <div className="mt-2">
+      <small>Scannez pour réserver ce scooter</small>
+    </div>
+  </div>
+)}
     </div>
   );
 };

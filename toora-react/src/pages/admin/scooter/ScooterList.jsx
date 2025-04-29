@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import scooterAPI from '../../../api/scooters';
+import { QRCodeCanvas } from "qrcode.react";
 
 const ScooterList = () => {
   const [scooters, setScooters] = useState([]);
@@ -26,6 +27,7 @@ const ScooterList = () => {
             <th>Modèle</th>
             <th>État</th>
             <th>Batterie (%)</th>
+            <th>QR Code</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -37,7 +39,13 @@ const ScooterList = () => {
               <td>{s.etat}</td>
               <td>{s.batterie}</td>
               <td>
-                <Link to={`/scooters/${s.id}`} className="btn btn-info btn-sm me-1">Voir</Link>
+                <QRCodeCanvas
+                  value={`http://localhost:3000/trottinettes/${s.id}/reserver`}
+                  size={64}
+                />
+              </td>
+              <td>
+                <Link to={`/trottinettes/${s.id}`} className="btn btn-info btn-sm me-1">Voir</Link>
                 <Link to={`/scooters/${s.id}/edit`} className="btn btn-warning btn-sm me-1">Modifier</Link>
                 <button className="btn btn-danger btn-sm" onClick={() => deleteScooter(s.id)}>🗑️ Supprimer</button>
               </td>
