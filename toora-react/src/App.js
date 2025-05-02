@@ -21,8 +21,6 @@ import UsersList from './pages/admin/users/UsersList';
 import TarifList from './pages/admin/tarifs/TarifList';
 import TarifForm from './pages/admin/tarifs/TarifForm';
 import AllLocations from './pages/admin/locations/AllLocations';
-import Header from './components/Header';
-import Footer from './components/Footer';
 import UserReservations from './pages/user/UserReservations';
 import ChangeInfoPage from './pages/user/ChangeInfoPage';
 
@@ -53,12 +51,6 @@ const App = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <HeaderWithNavigate
-        isLoggedIn={isLoggedIn}
-        isAdmin={isAdmin}
-        setIsLoggedIn={setIsLoggedIn}
-        setIsAdmin={setIsAdmin}
-      />
       <main className="flex-grow-1">
         <Routes>
           {/* Public Routes */}
@@ -121,26 +113,8 @@ const App = () => {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>
-      <Footer />
+      
     </div>
-  );
-};
-
-// Wrapper for Header to use useNavigate
-const HeaderWithNavigate = ({ isLoggedIn, isAdmin, setIsLoggedIn, setIsAdmin }) => {
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    localStorage.clear();
-    setIsLoggedIn(false);
-    setIsAdmin(false);
-    navigate("/");
-  };
-  return (
-    <Header
-      isLoggedIn={isLoggedIn}
-      isAdmin={isAdmin}
-      handleLogout={handleLogout}
-    />
   );
 };
 
