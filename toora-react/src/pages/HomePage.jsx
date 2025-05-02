@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import HowItWorks from '../components/HowItWorks';
 import Benefits from '../components/Benefits';
@@ -8,12 +10,12 @@ import MapSection from '../components/MapSection';
 import Testimonials from '../components/Testimonials';
 import Footer from '../components/Footer';
 import AuthModals from '../components/AuthModals';
-import Header from '../components/Header';
 
 const HomePage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showSignupForm, setShowSignupForm] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (email, password) => {
     try {
@@ -63,18 +65,22 @@ const HomePage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) => {
     localStorage.clear();
     setIsLoggedIn(false);
     setIsAdmin(false);
+    navigate('/');
   };
 
   return (
     <div className="min-vh-100 bg-light">
-
+      <Header
+        isLoggedIn={isLoggedIn}
+        isAdmin={isAdmin}
+        handleLogout={handleLogout}
+      />
       <HeroSection />
       <HowItWorks />
       <Benefits />
       <MapSection />
       <Testimonials />
-
-      <AuthModals 
+      <AuthModals
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
         showLoginForm={showLoginForm}
@@ -85,6 +91,7 @@ const HomePage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) => {
         handleRegister={handleRegister}
         errorMessage={errorMessage}
       />
+      <Footer />
     </div>
   );
 };
