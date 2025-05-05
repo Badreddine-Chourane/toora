@@ -105,3 +105,60 @@
   margin-top: 1rem;
   width: 100%;
 }
+
+/* Register Page Container */
+.register-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Optional for better text visibility */
+}
+
+/* Register Form Container */
+.register-form-container {
+  position: relative;
+  z-index: 1; /* Ensure it appears above the video */
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for better contrast */
+  padding: 3rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 700px;
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+}
+
+/* Register Form Title */
+.register-form-container h2 {
+  font-size: 2.5rem; 
+  margin-bottom: 1rem;
+  text-align: center; 
+}
+
+
+/* Labels */
+.register-form-container label {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Input Fields */
+.register-form-container input {
+  font-size: 1rem;
+  padding: 0.8rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Button */
+.register-form-container button {
+  font-size: 1.4rem;
+  padding: 0.8rem 1.5rem;
+  margin-top: 1rem;
+  width: 100%;
+}

@@ -31,56 +31,70 @@ const RegisterPage = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Register</h2>
-      {errorMessage && <p className="text-danger">{errorMessage}</p>}
-      <form onSubmit={handleRegister}>
-        <div className="mb-3">
-          <label htmlFor="name" className="form-label">Name</label>
-          <input 
-            type="text" 
-            id="name" 
-            className="form-control" 
-            value={name} 
-            onChange={(e) => setName(e.target.value)} 
-            required 
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            className="form-control" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            className="form-control" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="passwordConfirmation" className="form-label">Confirm Password</label>
-          <input 
-            type="password" 
-            id="passwordConfirmation" 
-            className="form-control" 
-            value={passwordConfirmation} 
-            onChange={(e) => setPasswordConfirmation(e.target.value)} 
-            required 
-          />
-        </div>
-        <button type="submit" className="btn btn-success">Register</button>
-      </form>
+    <div className="register-page">
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        className="video-background"
+      >
+        <source src="/videos/video_register.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Registration Form */}
+      <div className="register-form-container">
+        <h2 className="text-white">Sign Up</h2>
+        {errorMessage && <p className="text-danger">{errorMessage}</p>}
+        <form onSubmit={handleRegister}>
+          <div className="mb-3">
+            <label htmlFor="name" className="form-label text-white">Name</label>
+            <input 
+              type="text" 
+              id="name" 
+              className="form-control" 
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
+              required 
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label text-white">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              className="form-control" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              required 
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label text-white">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              className="form-control" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              required 
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="passwordConfirmation" className="form-label text-white">Confirm Password</label>
+            <input 
+              type="password" 
+              id="passwordConfirmation" 
+              className="form-control" 
+              value={passwordConfirmation} 
+              onChange={(e) => setPasswordConfirmation(e.target.value)} 
+              required 
+            />
+          </div>
+          <button type="submit" className="btn btn-success">Register</button>
+        </form>
+      </div>
     </div>
   );
 };
