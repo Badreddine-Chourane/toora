@@ -1,13 +1,37 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Header = ({ isLoggedIn, isAdmin, handleLogout }) => {
   const userName = localStorage.getItem('userName');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isFixed, setIsFixed] = useState(true); // State to toggle fixed position
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const header = document.querySelector('header');
+      const headerHeight = header.offsetHeight;
+      const scrollY = window.scrollY;
+
+      // Toggle fixed position based on scroll position
+      if (scrollY > headerHeight) {
+        setIsFixed(false); // Switch to absolute when scrolled past
+      } else {
+        setIsFixed(true); // Remain fixed at the top
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <header>
-      <nav className="bg-success text-white p-4">
+      <nav
+        className="bg-success text-white p-4"
+      >
         <div className="container d-flex justify-content-between align-items-center">
           <Link to="/" className="text-white text-decoration-none">
             <h1 className="h2 mb-0 fw-bold">Toora.ma</h1>

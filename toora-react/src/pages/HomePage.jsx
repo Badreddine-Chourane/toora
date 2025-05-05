@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import HowItWorks from '../components/HowItWorks';
 import Benefits from '../components/Benefits';
 import MapSection from '../components/MapSection';
 import Testimonials from '../components/Testimonials';
-import Footer from '../components/Footer';
 import AuthModals from '../components/AuthModals';
 
 const HomePage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) => {
@@ -70,11 +68,6 @@ const HomePage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) => {
 
   return (
     <div className="min-vh-100 bg-light">
-      <Header
-        isLoggedIn={isLoggedIn}
-        isAdmin={isAdmin}
-        handleLogout={handleLogout}
-      />
       <HeroSection />
       <HowItWorks />
       <Benefits />
@@ -91,7 +84,6 @@ const HomePage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) => {
         handleRegister={handleRegister}
         errorMessage={errorMessage}
       />
-      <Footer />
     </div>
   );
 };

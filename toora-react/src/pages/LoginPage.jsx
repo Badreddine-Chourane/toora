@@ -21,7 +21,7 @@ const LoginPage = ({ setIsLoggedIn, setIsAdmin }) => {
         localStorage.setItem('authToken', token);
         localStorage.setItem('userRole', role);
         localStorage.setItem('userName', user.name);
-        localStorage.setItem('userId', user.id); // <-- This is important!
+        localStorage.setItem('userId', user.id);
         setIsLoggedIn(true);
         setIsAdmin && setIsAdmin(role === 'admin');
         navigate('/');
@@ -37,34 +37,48 @@ const LoginPage = ({ setIsLoggedIn, setIsAdmin }) => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Login</h2>
-      {errorMessage && <p className="text-danger">{errorMessage}</p>}
-      <form onSubmit={handleLogin}>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            className="form-control" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            className="form-control" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
-          />
-        </div>
-        <button type="submit" className="btn btn-success">Login</button>
-      </form>
+    <div className="login-page">
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        className="video-background"
+      >
+        <source src="/videos/video_login.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Login Form */}
+      <div className="login-form-container">
+        <h2 className="text-white">Login</h2>
+        {errorMessage && <p className="text-danger">{errorMessage}</p>}
+        <form onSubmit={handleLogin}>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label text-white">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              className="form-control" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              required 
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label text-white">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              className="form-control" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              required 
+            />
+          </div>
+          <button type="submit" className="btn btn-success">Login</button>
+        </form>
+      </div>
     </div>
   );
 };
