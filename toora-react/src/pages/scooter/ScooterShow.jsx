@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import scooterAPI from '../../api/scooters';
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+// import Header from "../../components/Header";
+// import Footer from "../../components/Footer";
 import AuthModals from "../../components/AuthModals";
 import { QRCodeCanvas } from "qrcode.react";
 
@@ -121,7 +121,7 @@ const ScooterShow = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      {/* <Footer /> */}
       <AuthModals
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
