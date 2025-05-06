@@ -21,7 +21,7 @@ const Benefits = () => {
   ];
 
   return (
-    <section className="py-5 bg-light">
+    <section className="homepage_section bg-light">
       <div className="container">
         <h2 className="text-center fw-bold mb-5 display-5">Pourquoi choisir Toora.ma ?</h2>
         <div className="row g-4">

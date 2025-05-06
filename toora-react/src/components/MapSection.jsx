@@ -19,7 +19,7 @@ const MapSection = () => {
   ];
 
   return (
-    <section className="py-5 bg-white">
+    <section className="homepage_section bg-white">
       <div className="container">
         <div className="row align-items-center">
           <div className="col-md-6 mb-4 mb-md-0">

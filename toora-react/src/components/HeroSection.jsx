@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const HeroSection = () => {
   return (
     <section
-      className="text-white py-5"
+      className="text-white homepage_section"
       style={{
         backgroundImage: `url(${require('../assets/images/foot_scooter.jpg')})`,
         backgroundSize: "cover",
