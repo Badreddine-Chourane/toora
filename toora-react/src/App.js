@@ -21,6 +21,7 @@ import ScooterEdit from './pages/admin/scooter/ScooterEdit';
 import ScooterList from './pages/admin/scooter/ScooterList';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import UsersList from './pages/admin/users/UsersList';
+// import EditUser from './pages/admin/users/EditUser';
 import TarifList from './pages/admin/tarifs/TarifList';
 import TarifForm from './pages/admin/tarifs/TarifForm';
 import AllLocations from './pages/admin/locations/AllLocations';
@@ -83,6 +84,7 @@ const App = () => {
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminRoute element={<AdminDashboard />} />} />
           <Route path="/admin/users" element={<AdminRoute element={<UsersList />} />} />
+          {/* <Route path="/admin/users/:id/edit" element={<AdminRoute element={<EditUser />} />} /> */}
           <Route path="/villes" element={<AdminRoute element={<VilleList />} />} />
           <Route path="/villes/create" element={<AdminRoute element={<VilleCreate />} />} />
           <Route path="/villes/:id/edit" element={<AdminRoute element={<VilleEdit />} />} />
