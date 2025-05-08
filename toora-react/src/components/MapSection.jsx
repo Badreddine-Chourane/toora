@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Navigation } from 'lucide-react';
+import axios from 'axios'; // For API requests
 
 // Fix for default marker icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -13,11 +14,24 @@ L.Icon.Default.mergeOptions({
 });
 
 const MapSection = () => {
-  const scooters = [
-    { id: 1, latitude: 33.5731, longitude: -7.5898, ville: "Casablanca" },
-    { id: 2, latitude: 34.0209, longitude: -6.8416, ville: "Rabat" },
-    { id: 3, latitude: 31.6295, longitude: -7.9811, ville: "Marrakech" },
-  ];
+  const [scooters, setScooters] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch scooters from the backend
+  useEffect(() => {
+    const fetchScooters = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/scooters'); // Replace with your API endpoint
+        setScooters(response.data); // Assuming the API returns an array of scooters
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching scooters:', error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchScooters();
+  }, []);
 
   return (
     <section className="py-16 bg-gradient-to-br from-slate-50 to-slate-100">
@@ -68,30 +82,36 @@ const MapSection = () => {
           </div>
 
           <div className="h-96 rounded-2xl shadow-xl overflow-hidden border border-slate-200">
-            <MapContainer
-              center={[33.5731, -7.5898]}
-              zoom={8}
-              style={{ height: "100%", width: "100%" }}
-              className="z-0"
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-              {scooters.map((scooter) => (
-                <Marker
-                  key={scooter.id}
-                  position={[scooter.latitude, scooter.longitude]}
-                >
-                  <Popup className="font-medium text-slate-700">
-                    <div className="flex items-center">
-                      <Navigation className="text-emerald-500 mr-2" size={16} />
-                      Scooter disponible à <span className="font-semibold ml-1">{scooter.ville}</span>
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
-            </MapContainer>
+            {isLoading ? (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-slate-500">Chargement des trottinettes...</p>
+              </div>
+            ) : (
+              <MapContainer
+                center={[33.5731, -7.5898]} // Default center (Casablanca)
+                zoom={8}
+                style={{ height: "100%", width: "100%" }}
+                className="z-0"
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+                {scooters.map((scooter) => (
+                  <Marker
+                    key={scooter.id}
+                    position={[scooter.latitude, scooter.longitude]}
+                  >
+                    <Popup className="font-medium text-slate-700">
+                      <div className="flex items-center">
+                        <Navigation className="text-emerald-500 mr-2" size={16} />
+                        Scooter disponible à <span className="font-semibold ml-1">{scooter.ville}</span>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
+            )}
           </div>
         </div>
       </div>
