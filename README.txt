@@ -68,4 +68,10 @@ cd toora-react
 npm install
 npm install react-router-dom axios bootstrap qrcode.react dayjs
 
+npm install -D tailwindcss@3.4.17 postcss@8.5.3 autoprefixer@10.4.21
+npx tailwindcss@3.4.17 init -p
+npm install lucide-react
+npm install react-leaflet leaflet
+npm install leaflet
+
 npm start
