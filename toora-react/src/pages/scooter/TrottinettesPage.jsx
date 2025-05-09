@@ -83,11 +83,11 @@ const TrottinettesPage = ({ isLoggedIn, setIsLoggedIn, isAdmin, setIsAdmin }) =>
 
                         <div className="mt-auto pt-4 border-t border-gray-100 flex justify-between items-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                            scooter.etat === "bon" 
+                            scooter.etat === "Available" 
                               ? "bg-blue-100 text-blue-800" 
                               : "bg-amber-100 text-amber-800"
                           }`}>
-                            {scooter.etat === "bon" ? "Excellent état" : "En maintenance"}
+                            {scooter.etat === "Available" ? "Excellent état" : "En maintenance"}
                           </span>
                           
                           <button
