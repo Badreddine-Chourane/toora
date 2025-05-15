@@ -1,9 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import scooterAPI from '../../api/scooters';
 import { QRCodeCanvas } from "qrcode.react";
 import { ArrowLeft, Battery, MapPin, Calendar } from "lucide-react";
 import AuthModals from "../../components/AuthModals";
+import L from 'leaflet';
+
+// Fix for default marker icon
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+});
+
+// Default coordinates for Casablanca
+const CASABLANCA_CENTER = {
+    lat: 33.5731104,
+    lng: -7.5898434
+};
 
 const ScooterShow = () => {
   const { id } = useParams();
@@ -15,7 +32,20 @@ const ScooterShow = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    scooterAPI.get(id).then(res => setScooter(res.data));
+    scooterAPI.get(id).then(res => {
+      const data = res.data;
+      // Ensure coordinates are parsed as floats and validated
+      data.latitude = parseFloat(data.latitude) || CASABLANCA_CENTER.lat;
+      data.longitude = parseFloat(data.longitude) || CASABLANCA_CENTER.lng;
+      
+      // Validate coordinates are within Morocco/Casablanca region
+      if (data.latitude < 20 || data.latitude > 40 || data.longitude < -13 || data.longitude > 0) {
+        data.latitude = CASABLANCA_CENTER.lat;
+        data.longitude = CASABLANCA_CENTER.lng;
+      }
+      
+      setScooter(data);
+    });
     setIsLoggedIn(!!localStorage.getItem('authToken'));
   }, [id]);
 
@@ -28,10 +58,14 @@ const ScooterShow = () => {
   }, [isLoggedIn, pendingReservation, id, navigate]);
 
   const handleReserve = () => {
+    // Don't allow reservation if scooter is in maintenance
+    if (scooter?.etat !== "available") {
+      return;
+    }
+    
     if (!isLoggedIn) {
       setPendingReservation(true);
       setShowLoginForm(true);
-      navigate(`/login`);
     } else {
       navigate(`/trottinettes/${id}/reserver`);
     }
@@ -60,15 +94,20 @@ const ScooterShow = () => {
           </div>
 
           {/* Details Section (50% width) */}
-          <div className="sm:w-1/2 p-6 sm:p-8">
-            <div className="flex justify-between items-start mb-4">
+          <div className="sm:w-1/2 p-6 sm:p-8">            <div className="flex justify-between items-start mb-4">
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{scooter?.modele}</h1>
               <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                scooter?.en_location 
-                  ? 'bg-red-100 text-red-800' 
-                  : 'bg-emerald-100 text-emerald-800'
+                scooter?.etat !== "available"
+                  ? 'bg-amber-100 text-amber-800'
+                  : scooter?.en_location
+                    ? 'bg-red-100 text-red-800'
+                    : 'bg-emerald-100 text-emerald-800'
               }`}>
-                {scooter?.en_location ? 'Indisponible' : 'Disponible'}
+                {scooter?.etat !== "available" 
+                  ? 'En maintenance'
+                  : scooter?.en_location 
+                    ? 'Indisponible' 
+                    : 'Disponible'}
               </span>
             </div>
 
@@ -84,27 +123,61 @@ const ScooterShow = () => {
               </div>
             </div>
 
-            {/* Location */}
+            {/* Location with Map */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Localisation</h3>
-              <p className="text-gray-600">
-                📍 Latitude: {scooter?.latitude}, Longitude: {scooter?.longitude}
-              </p>
+              {scooter?.latitude && scooter?.longitude ? (
+                <div className="h-[300px] rounded-lg overflow-hidden">
+                  <MapContainer 
+                    center={[scooter.latitude, scooter.longitude]} 
+                    zoom={14} 
+                    className="h-full w-full"
+                    zoomControl={false}
+                  >
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                    <ZoomControl position="topright" />
+                    <Marker 
+                      position={[scooter.latitude, scooter.longitude]}
+                    >
+                      <Popup>
+                        <div className="text-center">
+                          <strong>{scooter.modele}</strong><br />
+                          <span className="text-sm text-gray-600">{scooter.ville?.nom || "Casablanca"}</span>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
+                </div>
+              ) : (
+                <p className="text-gray-500">Localisation non disponible</p>
+              )}
             </div>
 
             {/* Button */}
             <button
               onClick={handleReserve}
-              disabled={scooter?.en_location}
+              disabled={scooter?.en_location || scooter?.etat !== "available"}
               className={`w-full flex items-center justify-center px-4 py-3 rounded-lg font-medium ${
-                scooter?.en_location
+                scooter?.en_location || scooter?.etat !== "available"
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                   : 'bg-emerald-600 hover:bg-emerald-700 text-white'
               } transition-colors`}
             >
               <Calendar className="mr-2" size={16} />
-              {scooter?.en_location ? 'Déjà réservée' : 'Réserver'}
+              {scooter?.en_location ? 'Déjà réservée' : 
+               scooter?.etat !== "available" ? 'En maintenance' : 
+               'Réserver'}
             </button>
+
+            {/* Display maintenance status if applicable */}
+            {scooter?.etat !== "available" && (
+              <div className="mt-2 text-center text-amber-600 text-sm">
+                Cette trottinette est actuellement en maintenance
+              </div>
+            )}
 
             {/* QR Code */}
             <div className="mt-8 pt-6 border-t border-gray-200 text-center">

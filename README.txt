@@ -54,7 +54,7 @@ composer install
 cp .env.example .env
 
 php artisan key:generate
-
+php artisan storage:link
 composer require laravel/sanctum
 composer require spatie/laravel-permission
 php artisan migrate --seed

@@ -121,7 +121,7 @@ const ScooterCreate = () => {
                   >
                     <option value="available">Available</option>
                     <option value="maintenance">Maintenance</option>
-                    <option value="reserved">Reserved</option>
+                    {/* <option value="reserved">Reserved</option> */}
                   </select>
                 </div>
                 
@@ -179,7 +179,7 @@ const ScooterCreate = () => {
                   </select>
                 </div>
                 
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                   <input
                     type="checkbox"
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
@@ -187,7 +187,7 @@ const ScooterCreate = () => {
                     onChange={(e) => setForm({ ...form, en_location: e.target.checked })}
                   />
                   <label className="ml-2 block text-sm text-gray-700">Available for rent</label>
-                </div>
+                </div> */}
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Photo</label>

@@ -1,10 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Battery, MapPin, Clock, Calendar, Zap } from "lucide-react";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Battery, MapPin, Calendar, Zap } from "lucide-react";
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import scooterAPI from "../../api/scooters";
 import locationAPI from "../../api/locations";
 import dayjs from "dayjs";
+
+// Fix for default marker icon
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+});
+
+// Default coordinates for Casablanca
+const CASABLANCA_CENTER = {
+  lat: 33.5731104,
+  lng: -7.5898434
+};
 
 const ReserveScooter = () => {
   const { id } = useParams();
@@ -17,13 +33,37 @@ const ReserveScooter = () => {
 
   useEffect(() => {
     scooterAPI.get(id).then(res => {
-      setScooter(res.data);
+      // Check if scooter is in maintenance mode
+      if (res.data.etat !== "available") {
+        navigate('/trottinettes', { 
+          state: { 
+            error: "Cette trottinette est actuellement en maintenance et ne peut pas être réservée."
+          }
+        });
+        return;
+      }      const data = res.data;
+      // Ensure coordinates are parsed as floats and validated
+      data.latitude = parseFloat(data.latitude) || CASABLANCA_CENTER.lat;
+      data.longitude = parseFloat(data.longitude) || CASABLANCA_CENTER.lng;
+      
+      // Validate coordinates are within Morocco/Casablanca region
+      if (data.latitude < 20 || data.latitude > 40 || data.longitude < -13 || data.longitude > 0) {
+        data.latitude = CASABLANCA_CENTER.lat;
+        data.longitude = CASABLANCA_CENTER.lng;
+      }
+      
+      setScooter(data);
       setLoading(false);
     });
-  }, [id]);
+  }, [id, navigate]);
 
   useEffect(() => {
     if (!scooter || !scooter.ville || !scooter.ville.tarif) {
+      setPrice(0);
+      return;
+    }
+    // Only calculate price if scooter is available
+    if (scooter.etat !== "available") {
       setPrice(0);
       return;
     }
@@ -200,28 +240,50 @@ const ReserveScooter = () => {
               </div>
             </form>
           </div>
-        </div>
-
-        {/* Map Section */}
-        <div className="mt-4">
-          <MapContainer
-            center={[scooter.latitude, scooter.longitude]}
-            zoom={15}
-            style={{ height: "200px", width: "100%", borderRadius: "8px" }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            <Marker position={[scooter.latitude, scooter.longitude]}>
-              <Popup>
-                {scooter.modele} - {scooter.ville?.nom || "Ville inconnue"}
-              </Popup>
-            </Marker>
-          </MapContainer>
-          <p className="text-gray-700 text-sm mt-2">
-            <strong>Coordonnées:</strong> {scooter.latitude}, {scooter.longitude}
-          </p>
+        </div>        {/* Map Section */}
+        <div className="mt-8 bg-white rounded-xl shadow-md p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <MapPin className="text-emerald-500 mr-2" size={20} />
+            Localisation de la trottinette
+          </h2>
+          
+          <div className="relative">
+            <div className="h-[300px] w-full rounded-lg overflow-hidden shadow-inner">
+              <MapContainer
+                center={[scooter.latitude, scooter.longitude]}
+                zoom={15}
+                style={{ height: "100%", width: "100%" }}
+                zoomControl={false}
+                className="z-0"
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+                <ZoomControl position="topright" />
+                <Marker position={[scooter.latitude, scooter.longitude]}>
+                  <Popup>
+                    <div className="text-center p-2">
+                      <strong className="text-emerald-600 block mb-1">{scooter.modele}</strong>
+                      <div className="flex items-center justify-center text-sm text-gray-600">
+                        <MapPin size={14} className="mr-1" />
+                        {scooter.ville?.nom || "Ville inconnue"}
+                      </div>
+                      <div className="mt-1 text-sm">
+                        <strong>Batterie:</strong> {scooter.batterie}%
+                      </div>
+                    </div>
+                  </Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+            <div className="absolute bottom-4 right-4 bg-white px-3 py-2 rounded-lg shadow-md text-sm text-gray-600">
+              <div className="flex items-center">
+                <MapPin size={14} className="text-emerald-500 mr-1" />
+                {scooter.latitude.toFixed(6)}, {scooter.longitude.toFixed(6)}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

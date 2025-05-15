@@ -24,15 +24,21 @@ const ChangeInfoPage = () => {
     };
     if (userId) fetchUser();
   }, [userId]);
-
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
     try {
-      await usersAPI.update(userId, { name, email, password });
+      // Only include password in the update if it's not empty
+      const updateData = { name, email };
+      if (password.trim() !== '') {
+        updateData.password = password;
+      }
+      
+      await usersAPI.update(userId, updateData);
       setSuccess(true);
       setTimeout(() => navigate("/"), 1500);
     } catch (e) {
+      console.error('Update error:', e);
       alert(e.response?.data?.message || "Erreur lors de la mise à jour");
     }
     setLoading(false);
