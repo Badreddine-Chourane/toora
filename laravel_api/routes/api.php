@@ -32,7 +32,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/utilisateurs/{id}', [UtilisateurController::class, 'show'])->middleware('auth.self.or.admin');
 
     // Other protected resources
-    Route::apiResource('scooters', ScooterController::class);
     Route::apiResource('locations', LocationController::class);
     Route::apiResource('paiements', PaiementController::class);
     Route::apiResource('villes', VilleController::class);
@@ -99,7 +98,7 @@ Route::post('scooters/{id}/upload-photo', [ScooterController::class, 'uploadPhot
 Route::get('scooters', [ScooterController::class, 'index']);
 Route::post('scooters', [ScooterController::class, 'store']);
 Route::get('scooters/{id}', [ScooterController::class, 'show']);
-Route::put('scooters/{id}', [ScooterController::class, 'update']);
+Route::put('scooters/{scooter}', [ScooterController::class, 'update']);
 Route::delete('scooters/{id}', [ScooterController::class, 'destroy']);
 // User CRUD routes
 Route::get('/utilisateurs', [UtilisateurController::class, 'index']);        // List all users

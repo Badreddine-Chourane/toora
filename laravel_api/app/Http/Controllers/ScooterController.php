@@ -49,15 +49,15 @@ class ScooterController extends Controller
     public function update(Request $request, Scooter $scooter)
     {
         $validated = $request->validate([
-            'code' => 'required',
-            'modele' => 'required',
-            'etat' => 'required',
-            'batterie' => 'required|numeric',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
+            'code' => 'required|string|max:255',
+            'modele' => 'required|string|max:255',
+            'etat' => 'required|string|in:available,in_use,maintenance',
+            'batterie' => 'required|numeric|min:0|max:100',
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
             'ville_id' => 'required|exists:villes,id',
             'en_location' => 'boolean',
-            'photo' => 'nullable|image',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($request->hasFile('photo')) {
