@@ -19,7 +19,7 @@ const ScooterCreate = () => {
   const [form, setForm] = useState({
     code: '',
     modele: '',
-    etat: 'available',
+    etat: 'disponible',
     batterie: 100,
     latitude: '',
     longitude: '',
@@ -53,6 +53,7 @@ const ScooterCreate = () => {
     fetchVilles();
   }, []);
 
+<<<<<<< HEAD
   // Map modal effect
   useEffect(() => {
     if (showMapModal) {
@@ -92,6 +93,49 @@ const ScooterCreate = () => {
       }
     };
     // eslint-disable-next-line
+=======
+  useEffect(() => {
+    if (showMapModal && !map) {
+      const initialLat = form.latitude || 48.8566; // Paris par défaut
+      const initialLng = form.longitude || 2.3522;
+      
+      const mapInstance = L.map('map-container').setView([initialLat, initialLng], 13);
+      
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributeurs'
+      }).addTo(mapInstance);
+      
+      // Ajouter un marqueur si des coordonnées existent
+      if (form.latitude && form.longitude) {
+        const newMarker = L.marker([form.latitude, form.longitude]).addTo(mapInstance);
+        setMarker(newMarker);
+      }
+      
+      // Gestion du clic sur la carte
+      mapInstance.on('click', (e) => {
+        const { lat, lng } = e.latlng;
+        
+        if (marker) {
+          mapInstance.removeLayer(marker);
+        }
+        
+        const newMarker = L.marker([lat, lng]).addTo(mapInstance);
+        setMarker(newMarker);
+        
+        setForm(prev => ({
+          ...prev,
+          latitude: lat.toString(),
+          longitude: lng.toString()
+        }));
+      });
+      
+      setMap(mapInstance);
+      
+      return () => {
+        mapInstance.remove();
+      };
+    }
+>>>>>>> edffa3c23fb0d0ddfff6a5f2e0de0bc99f14adbc
   }, [showMapModal]);
 
   const handleChange = (e) => {
@@ -176,6 +220,7 @@ const ScooterCreate = () => {
     }
   };
 
+<<<<<<< HEAD
   // Handler to open map modal
   const handleMapClick = (e) => {
     e.preventDefault();
@@ -183,6 +228,12 @@ const ScooterCreate = () => {
   };
 
   // Handler to confirm map selection
+=======
+  const handleMapClick = () => {
+    setShowMapModal(true);
+  };
+
+>>>>>>> edffa3c23fb0d0ddfff6a5f2e0de0bc99f14adbc
   const confirmMapSelection = () => {
     setShowMapModal(false);
   };
@@ -420,6 +471,7 @@ const ScooterCreate = () => {
             <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl">
               <div className="p-4 border-b">
                 <h3 className="text-lg font-medium text-gray-900">Sélectionnez l'emplacement</h3>
+<<<<<<< HEAD
                 <p className="text-sm text-gray-500 mb-2">Cliquez sur la carte pour positionner le scooter</p>
                 <div id="map-container" style={{ height: 400, width: '100%', borderRadius: 8, marginBottom: 16 }} />
                 <div className="flex gap-2 mb-2">
@@ -442,13 +494,49 @@ const ScooterCreate = () => {
                   type="button"
                   onClick={() => setShowMapModal(false)}
                   className="px-4 py-2 bg-gray-200 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-300"
+=======
+                <p className="text-sm text-gray-500">Cliquez sur la carte pour positionner le scooter</p>
+              </div>
+              <div className="p-4">
+                <div id="map-container" className="h-96 w-full rounded-md"></div>
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                    <input
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                      value={form.latitude}
+                      onChange={(e) => setForm({...form, latitude: e.target.value})}
+                      placeholder="Latitude"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                    <input
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                      value={form.longitude}
+                      onChange={(e) => setForm({...form, longitude: e.target.value})}
+                      placeholder="Longitude"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 border-t flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => setShowMapModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+>>>>>>> edffa3c23fb0d0ddfff6a5f2e0de0bc99f14adbc
                 >
                   Annuler
                 </button>
                 <button
                   type="button"
                   onClick={confirmMapSelection}
+<<<<<<< HEAD
                   className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm text-sm font-medium hover:bg-blue-700"
+=======
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+>>>>>>> edffa3c23fb0d0ddfff6a5f2e0de0bc99f14adbc
                 >
                   Confirmer l'emplacement
                 </button>
