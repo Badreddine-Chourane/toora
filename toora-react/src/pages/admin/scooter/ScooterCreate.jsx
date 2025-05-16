@@ -257,7 +257,8 @@ const ScooterCreate = () => {
                     required
                   >
                     <option value="available">Available</option>
-                    <option value="en_maintenance">En Maintenance</option>
+                    <option value="maintenance">Maintenance</option>
+                    {/* <option value="reserved">Reserved</option> */}
                   </select>
                 </div>
                 
@@ -338,7 +339,7 @@ const ScooterCreate = () => {
                   </select>
                 </div>
                 
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                   <input
                     id="en_location"
                     name="en_location"
@@ -347,10 +348,8 @@ const ScooterCreate = () => {
                     checked={form.en_location}
                     onChange={handleChange}
                   />
-                  <label htmlFor="en_location" className="ml-2 block text-sm text-gray-700">
-                    Disponible à la location
-                  </label>
-                </div>
+                  <label className="ml-2 block text-sm text-gray-700">Available for rent</label>
+                </div> */}
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Photo</label>

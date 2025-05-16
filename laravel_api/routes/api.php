@@ -18,12 +18,26 @@ Route::get('/ping', function () {
 });
 
 // RESTful API resources
-Route::apiResource('scooters', ScooterController::class);
-Route::apiResource('locations', LocationController::class);
-Route::apiResource('paiements', PaiementController::class);
-Route::apiResource('utilisateurs', UtilisateurController::class);
-Route::apiResource('villes', VilleController::class);
-Route::apiResource('tarifs', TarifController::class);
+// Admin-only routes
+Route::middleware(['auth:sanctum'])->group(function () {
+    // User management routes (admin only)
+    Route::middleware(['auth.admin'])->group(function () {
+        Route::get('/utilisateurs', [UtilisateurController::class, 'index']);
+        Route::post('/utilisateurs', [UtilisateurController::class, 'store']);
+        Route::put('/utilisateurs/{id}', [UtilisateurController::class, 'update']);
+        Route::delete('/utilisateurs/{id}', [UtilisateurController::class, 'destroy']);
+    });
+    
+    // User can get their own profile
+    Route::get('/utilisateurs/{id}', [UtilisateurController::class, 'show'])->middleware('auth.self.or.admin');
+
+    // Other protected resources
+    Route::apiResource('scooters', ScooterController::class);
+    Route::apiResource('locations', LocationController::class);
+    Route::apiResource('paiements', PaiementController::class);
+    Route::apiResource('villes', VilleController::class);
+    Route::apiResource('tarifs', TarifController::class);
+});
 
 // Register
 Route::post('/register', function (Request $request) {

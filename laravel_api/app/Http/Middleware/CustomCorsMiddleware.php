@@ -17,7 +17,8 @@ class CustomCorsMiddleware
         // Allow specific methods
         $response->headers->set('Access-Control-Allow-Methods', env('CORS_ALLOWED_METHODS', 'GET, POST, PUT, DELETE'));
         // Allow specific headers
-        $response->headers->set('Access-Control-Allow-Headers', env('CORS_ALLOWED_HEADERS', 'Content-Type, X-Requested-With'));
+        $response->headers->set('Access-Control-Allow-Headers', env('CORS_ALLOWED_HEADERS', 'Content-Type, X-Requested-With, Authorization, Accept'));
+        $response->headers->set('Access-Control-Allow-Credentials', 'true');
 
         // Handle preflight OPTIONS request
         if ($request->getMethod() == "OPTIONS") {

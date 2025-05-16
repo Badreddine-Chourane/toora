@@ -13,22 +13,35 @@ const EditUser = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  useEffect(() => {
+  const [showSuccess, setShowSuccess] = useState(false);  useEffect(() => {
     const fetchUser = async () => {
       try {
+        // Check if user is admin first
+        const token = localStorage.getItem('authToken');
+        const userRole = localStorage.getItem('userRole');
+        
+        if (!token || userRole !== 'admin') {
+          alert('Unauthorized. Only admins can edit users.');
+          navigate('/');
+          return;
+        }
+
         const response = await userAPI.get(id);
         setFormData({
-          name: response.data.name,
-          email: response.data.email,
-          role: response.data.role
+          name: response.data.name || '',
+          email: response.data.email || '',
+          role: response.data.role || 'user'
         });
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching user:', error);
         setIsLoading(false);
-        navigate('/users');
+        if (error.response?.status === 403) {
+          alert('Unauthorized. Only admins can edit users.');
+          navigate('/');
+        } else {
+          navigate('/users');
+        }
       }
     };
 
@@ -41,20 +54,59 @@ const EditUser = () => {
       ...prev,
       [name]: value
     }));
-  };
-
-  const handleSubmit = async (e) => {
+  };  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      await userAPI.update(id, formData);
+      // Log the data being sent
+      console.log('Submitting form data:', formData);
+
+      // Client-side validation
+      if (!formData.name?.trim()) {
+        throw new Error('Name is required');
+      }
+      if (!formData.email?.trim()) {
+        throw new Error('Email is required');
+      }
+      if (!formData.role?.trim()) {
+        throw new Error('Role is required');
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        throw new Error('Please enter a valid email address');
+      }
+
+      // Send the update request
+      const response = await userAPI.update(id, {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        role: formData.role.trim()
+      });
+      console.log('Update response:', response.data);
       setShowSuccess(true);
       setTimeout(() => {
         navigate('/users');
-      }, 1500);
-    } catch (error) {
+      }, 1500);    } catch (error) {
       console.error('Error updating user:', error);
+      
+      // Handle validation errors from the server
+      if (error.response?.status === 422) {
+        const validationErrors = error.response.data.errors;
+        console.log('Validation errors:', validationErrors);
+        const errorMessages = Object.values(validationErrors).flat().join('\n');
+        alert(`Validation errors:\n${errorMessages}`);
+      } 
+      // Handle client-side validation errors
+      else if (error.message) {
+        alert(error.message);
+      }
+      // Handle other errors
+      else {
+        alert('An error occurred while updating the user');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -128,16 +180,14 @@ const EditUser = () => {
                 required
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
               />
-            </div>
-
-            <div className="space-y-2">
+            </div>            <div className="space-y-2">
               <label htmlFor="role" className="block text-sm font-medium text-gray-700">
                 Role
               </label>
               <select
                 id="role"
                 name="role"
-                value={formData.role}
+                value={formData.role || 'user'}
                 onChange={handleChange}
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
                 required
